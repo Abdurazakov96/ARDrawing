@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		132F777222E8DCC100EA9BE3 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777122E8DCC100EA9BE3 /* CommandManager.swift */; };
+		132F777422E8DCD000EA9BE3 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777322E8DCD000EA9BE3 /* Command.swift */; };
+		132F777622E8E35F00EA9BE3 /* Floor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777522E8E35F00EA9BE3 /* Floor.swift */; };
+		132F777822E8E92800EA9BE3 /* PlaceNodeInFrontCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777722E8E92800EA9BE3 /* PlaceNodeInFrontCommand.swift */; };
+		132F777A22E8FA7700EA9BE3 /* PlaceNodeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777922E8FA7700EA9BE3 /* PlaceNodeCommand.swift */; };
+		132F777C22E8FDD100EA9BE3 /* PlaceNodeInPlaneCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132F777B22E8FDD100EA9BE3 /* PlaceNodeInPlaneCommand.swift */; };
 		5519DC5720238B6000B1008D /* OptionSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519DC5620238B6000B1008D /* OptionSelectorViewController.swift */; };
 		BE618F32203E31B8005EC6F1 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE618F31203E31B8005EC6F1 /* UIViewController+Extensions.swift */; };
 		BE915EAB20105C1D00A251FD /* OptionsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE915EAA20105C1D00A251FD /* OptionsContainerViewController.swift */; };
@@ -21,6 +27,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		132F777122E8DCC100EA9BE3 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
+		132F777322E8DCD000EA9BE3 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		132F777522E8E35F00EA9BE3 /* Floor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Floor.swift; sourceTree = "<group>"; };
+		132F777722E8E92800EA9BE3 /* PlaceNodeInFrontCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceNodeInFrontCommand.swift; sourceTree = "<group>"; };
+		132F777922E8FA7700EA9BE3 /* PlaceNodeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceNodeCommand.swift; sourceTree = "<group>"; };
+		132F777B22E8FDD100EA9BE3 /* PlaceNodeInPlaneCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceNodeInPlaneCommand.swift; sourceTree = "<group>"; };
 		5519DC5620238B6000B1008D /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
 		BE618F31203E31B8005EC6F1 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		BE915EAA20105C1D00A251FD /* OptionsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsContainerViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +59,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		132F777D22E9083A00EA9BE3 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				132F777122E8DCC100EA9BE3 /* CommandManager.swift */,
+				132F777322E8DCD000EA9BE3 /* Command.swift */,
+				132F777722E8E92800EA9BE3 /* PlaceNodeInFrontCommand.swift */,
+				132F777922E8FA7700EA9BE3 /* PlaceNodeCommand.swift */,
+				132F777B22E8FDD100EA9BE3 /* PlaceNodeInPlaneCommand.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
 		13F8C54722E31355009BB788 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				BEDB2EEF200ECC4C001C6BBC /* BasicShape.swift */,
+				132F777522E8E35F00EA9BE3 /* Floor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -114,6 +139,7 @@
 				13F8C54722E31355009BB788 /* App */,
 				13F8C54A22E313D6009BB788 /* View Controllers */,
 				13F8C54B22E313E5009BB788 /* Helpers */,
+				132F777D22E9083A00EA9BE3 /* Commands */,
 				13F8C54922E313C0009BB788 /* Storyboards */,
 				13F8C54822E3138D009BB788 /* Resources */,
 			);
@@ -205,12 +231,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				132F777622E8E35F00EA9BE3 /* Floor.swift in Sources */,
 				BEDB2EDE200EABAD001C6BBC /* ViewController.swift in Sources */,
 				BE915EAB20105C1D00A251FD /* OptionsContainerViewController.swift in Sources */,
 				BEDB2EDA200EABAD001C6BBC /* AppDelegate.swift in Sources */,
 				5519DC5720238B6000B1008D /* OptionSelectorViewController.swift in Sources */,
+				132F777C22E8FDD100EA9BE3 /* PlaceNodeInPlaneCommand.swift in Sources */,
+				132F777A22E8FA7700EA9BE3 /* PlaceNodeCommand.swift in Sources */,
 				BE618F32203E31B8005EC6F1 /* UIViewController+Extensions.swift in Sources */,
 				BEDB2EF0200ECC4C001C6BBC /* BasicShape.swift in Sources */,
+				132F777222E8DCC100EA9BE3 /* CommandManager.swift in Sources */,
+				132F777822E8E92800EA9BE3 /* PlaceNodeInFrontCommand.swift in Sources */,
+				132F777422E8DCD000EA9BE3 /* Command.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

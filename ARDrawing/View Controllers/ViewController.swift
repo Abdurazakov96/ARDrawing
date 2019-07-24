@@ -4,13 +4,13 @@ import ARKit
 class ViewController: UIViewController {
     @IBOutlet var sceneView: ARSCNView!
 
+    private let commandManager = CommandManager()
     private let configuration = ARWorldTrackingConfiguration()
     private var selectedNode: SCNNode?
-    private var placedNodes = [SCNNode]()
     private var planeNodes = [SCNNode]()
 
     private var lastObjectPlacedPosition: SCNVector3?
-    let distanceThreshold: Float = 0.05
+    private let distanceThreshold: Float = 0.05
 
     enum ObjectPlacementMode {
         case freeform, plane, image
@@ -42,9 +42,8 @@ class ViewController: UIViewController {
 
         if removeAnchors {
             options = [.removeExistingAnchors]
-            (placedNodes + planeNodes).forEach { $0.removeFromParentNode() }
-            placedNodes.removeAll()
-            planeNodes.removeAll()
+            resetPlaneNodes()
+            commandManager.reset()
         } else {
             options = []
         }
@@ -57,7 +56,6 @@ class ViewController: UIViewController {
         
         sceneView.delegate = self
         sceneView.autoenablesDefaultLighting = true
-        sceneView.showsStatistics = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,7 +80,6 @@ class ViewController: UIViewController {
 
         case .plane:
             addNode(node, at: touch.location(in: sceneView))
-            break
 
         case .image:
             break
@@ -105,72 +102,43 @@ class ViewController: UIViewController {
         lastObjectPlacedPosition = nil
     }
 
-    private func addNodeInFront(_ node: SCNNode) {
-        guard let currentFrame = sceneView.session.currentFrame else {
-            return
-        }
-
-        let transform = currentFrame.camera.transform
-        var translation = matrix_identity_float4x4
-        translation.columns.3.z = -0.2
-        node.simdTransform = matrix_multiply(transform, translation)
-
-        addNode(node, to: rootNode)
+    private func resetPlaneNodes() {
+        planeNodes.forEach { $0.removeFromParentNode() }
+        planeNodes.removeAll()
     }
 
-    private func addNode(_ node: SCNNode, to parentNode: SCNNode) {
-        let cloneNode = node.clone()
-        parentNode.addChildNode(cloneNode)
-        placedNodes.append(cloneNode)
+    private func addNodeInFront(_ node: SCNNode) {
+        guard let currentFrame = sceneView.session.currentFrame else { return }
+
+        commandManager.executeCommand(command: PlaceNodeInFrontCommand(
+            sourceNode: node,
+            parentNode: rootNode,
+            cameraTransform: currentFrame.camera.transform,
+            distance: 0.2
+        ))
     }
 
     private func addNode(_ node: SCNNode, at point: CGPoint) {
         guard let result = sceneView.hitTest(point, types: [.existingPlaneUsingExtent]).first
             else { return }
 
-        let transform = result.worldTransform
-        let position = SCNVector3(
-            transform.columns.3.x,
-            transform.columns.3.y,
-            transform.columns.3.z
+        let command = PlaceNodeInPlaneCommand(
+            sourceNode: node,
+            parentNode: rootNode,
+            transform: result.worldTransform,
+            distanceThreshold: distanceThreshold,
+            lastPlacedPosition: lastObjectPlacedPosition
         )
 
-        var distance = Float.greatestFiniteMagnitude
+        commandManager.executeCommand(command: command)
 
-        if let lastPosition = lastObjectPlacedPosition {
-            let deltaX = position.x - lastPosition.x
-            let deltaY = position.y - lastPosition.y
-            let deltaZ = position.z - lastPosition.z
-
-            distance = sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ)
+        if command.isExecuted {
+            lastObjectPlacedPosition = command.targetNodePosition
         }
-
-        if distanceThreshold < distance {
-            node.position = position
-            addNode(node, to: rootNode)
-            lastObjectPlacedPosition = node.position
-        }
-    }
-
-    private func createFloor(planeAnchor: ARPlaneAnchor) -> SCNNode {
-        let floorNode = SCNNode()
-
-        let planeGeometry = SCNPlane(
-            width: CGFloat(planeAnchor.extent.x),
-            height: CGFloat(planeAnchor.extent.z)
-        )
-
-        planeGeometry.firstMaterial?.diffuse.contents = #colorLiteral(red: 1, green: 0.6799775482, blue: 0.1184521644, alpha: 1)
-
-        floorNode.geometry = planeGeometry
-        floorNode.eulerAngles.x = -.pi / 2
-        floorNode.opacity = 0.25
-
-        return floorNode
     }
 
     private func nodeAdded(_ node: SCNNode, for anchor: ARPlaneAnchor) {
-        let floor = createFloor(planeAnchor: anchor)
+        let floor = Floor(planeAnchor: anchor)
         floor.isHidden = !showPlaneOverlay
 
         node.addChildNode(floor)
@@ -179,7 +147,11 @@ class ViewController: UIViewController {
 
     private func nodeAdded(_ node: SCNNode, for anchor: ARImageAnchor) {
         guard let selectedNode = self.selectedNode else { return }
-        addNode(selectedNode, to: node)
+
+        commandManager.executeCommand(command: PlaceNodeCommand(
+            sourceNode: selectedNode,
+            parentNode: node
+        ))
     }
 
     @IBAction func changeObjectMode(_ sender: UISegmentedControl) {
@@ -196,6 +168,14 @@ class ViewController: UIViewController {
         default:
             break
         }
+    }
+
+    @IBAction func undoPressed(_ sender: UIButton) {
+        commandManager.undo()
+    }
+
+    @IBAction func redoPressed(_ sender: UIButton) {
+        commandManager.redo()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -220,9 +200,7 @@ extension ViewController: OptionsViewControllerDelegate {
     }
     
     func undoLastObject() {
-        guard let lastNode = placedNodes.last else { return }
-        lastNode.removeFromParentNode()
-        placedNodes.removeLast()
+        commandManager.undo()
     }
     
     func resetScene() {
@@ -244,11 +222,8 @@ extension ViewController: ARSCNViewDelegate {
 
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        guard let floor = node.childNodes.first else { return }
-        guard let plane = floor.geometry as? SCNPlane else { return }
+        guard let floor = node.childNodes.first as? Floor else { return }
 
-        floor.position = SCNVector3(x: planeAnchor.center.x, y: 0, z: planeAnchor.center.z)
-        plane.width = CGFloat(planeAnchor.extent.x)
-        plane.height = CGFloat(planeAnchor.extent.z)
+        floor.update(with: planeAnchor)
     }
 }

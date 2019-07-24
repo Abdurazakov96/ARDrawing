@@ -103,17 +103,46 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="xGf-b2-LiP">
+                                <rect key="frame" x="16" y="36" width="139" height="38"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUa-MX-zjn">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="38"/>
+                                        <color key="backgroundColor" white="1" alpha="0.3732074058219178" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" title="UNDO">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="undoPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="JPS-cG-Qm3"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMa-CU-FWJ">
+                                        <rect key="frame" x="78" y="0.0" width="61" height="38"/>
+                                        <color key="backgroundColor" white="1" alpha="0.3732074058219178" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" title="REDO">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="redoPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="cjf-6E-ON9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ZCE-wD-2E2" firstAttribute="trailing" secondItem="Hss-D4-YVK" secondAttribute="trailing" id="9BF-a4-DTs"/>
                             <constraint firstItem="ZCE-wD-2E2" firstAttribute="bottom" secondItem="Hss-D4-YVK" secondAttribute="bottom" id="9oE-EN-HGn"/>
+                            <constraint firstItem="xGf-b2-LiP" firstAttribute="leading" secondItem="ZCE-wD-2E2" secondAttribute="leading" constant="16" id="DYh-p8-bx3"/>
                             <constraint firstItem="ZCE-wD-2E2" firstAttribute="bottom" secondItem="nGv-ui-K4i" secondAttribute="bottom" constant="20" id="EI9-ck-jaV"/>
                             <constraint firstItem="Hss-D4-YVK" firstAttribute="top" secondItem="ZCE-wD-2E2" secondAttribute="top" id="OgV-19-dSa"/>
                             <constraint firstItem="ZCE-wD-2E2" firstAttribute="bottom" secondItem="RK5-mG-jKn" secondAttribute="bottom" constant="20" id="Pfd-Nb-YUs"/>
                             <constraint firstItem="RK5-mG-jKn" firstAttribute="leading" secondItem="ZCE-wD-2E2" secondAttribute="leading" constant="16" id="SnR-GG-ypT"/>
                             <constraint firstItem="ZCE-wD-2E2" firstAttribute="trailing" secondItem="nGv-ui-K4i" secondAttribute="trailing" constant="17" id="i2L-km-UXq"/>
                             <constraint firstItem="Hss-D4-YVK" firstAttribute="leading" secondItem="ZCE-wD-2E2" secondAttribute="leading" id="tq9-FB-eeV"/>
+                            <constraint firstItem="xGf-b2-LiP" firstAttribute="top" secondItem="ZCE-wD-2E2" secondAttribute="top" constant="16" id="uqy-Ee-iWH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZCE-wD-2E2"/>
                     </view>
